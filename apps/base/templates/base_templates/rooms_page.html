@@ -1,0 +1,14 @@
+{% extends 'base_templates/base.html' %}
+
+{% block context %}
+
+    <h1>
+        {% for room in rooms %}
+            <h3>@{{ room.host.username }}</h3>
+            <h2>{{ room.id }}:<a href="{% url 'room' room.id %}">{{ room.name }}</a></h2>
+            <h3>{{ room.topic }}</h3>
+            <hr>
+        {% endfor %}
+    </h1>
+
+{% endblock %}

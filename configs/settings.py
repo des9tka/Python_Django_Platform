@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # my_custom_apps
-    'apps.rooms',
-    'apps.r_messages',
+    'apps.base',
 ]
 
 MIDDLEWARE = [

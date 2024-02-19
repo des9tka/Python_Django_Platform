@@ -3,5 +3,5 @@ from .views import get_rooms, get_room
 
 urlpatterns = [
     path('', get_rooms),
-    path('/<int:pk>', get_room)
+    path('/<int:pk>', get_room, name='room')
 ]
