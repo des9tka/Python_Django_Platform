@@ -2,8 +2,53 @@
 
 {% block context %}
 
-<h2>@{{ room.host.username }}</h2>
-<h2>Name - {{ room.name }}</h2>
-<h3>Description: {{ room.description }}</h3>
+    <style>
+        .room-wrapper {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+        }
+    </style>
 
-{% endblock context %}
+    <div class="room-wrapper">
+        <div class="room/comment-wrapper">
+            <h2>@{{ room.host.username }}</h2>
+            <h2>Name: {{ room.name }}</h2>
+            <h3>Description: {{ room.description }}</h3>
+
+            <div classname="comment-wrapper">
+
+                <hr>
+
+                {% for message in room_messages %}
+                    <div>
+                        <h5>@{{ message.user.username }} --- {{ message.created_at|timesince }} ago</h5>
+                        <p>{{ message.body }}</p>
+                        {% if message.user == request.user or request.user.is_superuser %}
+                            <a href="{% url 'delete_message' message.id %}">Delete</a>
+                        {% endif %}
+                        <hr>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            {% if request.user.is_authenticated %}
+                <div>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <input type="text" name="body" placeholder="Write a message...">
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+        <div class="participants-wrapper">
+            <h3>Participants</h3>
+            <hr>
+            {% for participant in participants %}
+                <p>
+                    @{{ participant.username }}
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

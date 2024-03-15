@@ -1,0 +1,12 @@
+{%  extends 'base_templates/base.html' %}
+
+{% block context %}
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <p>Are you sure to delete "{{ item }}"</p>
+        <input type="submit" value="Confirm"/>
+        <a href="{{ request.META.HTTP_REFERER }}">Cancel</a>
+    </form>
+
+{% endblock %}

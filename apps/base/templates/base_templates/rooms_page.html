@@ -2,13 +2,67 @@
 
 {% block context %}
 
-    <h1>
-        {% for room in rooms %}
-            <h3>@{{ room.host.username }}</h3>
-            <h2>{{ room.id }}:<a href="{% url 'room' room.id %}">{{ room.name }}</a></h2>
-            <h3>{{ room.topic }}</h3>
+    <style>
+        .rooms-page-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+        }
+    </style>
+
+    <div class="rooms-page-wrapper">
+        <div>
+            <h2>Topics List</h2>
+            <div>
+                <a href="{% url 'all_rooms' %}">All</a>
+            </div>
+
+            {% if request.user.is_authenticated %}
+                <div>
+                    <a href="{% url 'all_rooms' %}?q=my_rooms">My Rooms</a>
+                </div>
+            {% endif %}
+
+            {% for topic in topics %}
+                <div>
+                    <a href="{% url 'all_rooms' %}?q={{ topic.name }}">{{ topic.name }}</a>
+                </div>
+            {% endfor %}
+
+        </div>
+
+
+        <div>
+            <h5>{{ room_count }} rooms available!</h5>
+            <h1><a href="{% url 'create_room' %}">Create room</a></h1>
+
+            {% for room in rooms %}
+                <div>
+                    <h3>@{{ room.host }}</h3>
+                    <h2><a href="{% url 'room' room.id %}">{{ room }}</a></h2>
+                    <h3>{{ room.topic }}</h3>
+
+                    {% if request.user == room.host or request.user.is_superuser %}
+                        <a href="{% url 'update_room' room.id %}">Edit</a>
+                        <a href="{% url 'delete_room' room.id %}">Delete</a>
+                    {% endif %}
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="activity-feed">
+
+            <h3>Recent Activity</h3>
             <hr>
-        {% endfor %}
-    </h1>
+            {% for message in room_messages %}
+                <p>
+                <div>@{{ message.user }} reply to <a href="{% url 'room' message.room.id %}">"{{ message.room }}"</a> {{ message.created_at|timesince }} ago:</div>
+                <div>{{ message }}...</div>
+                <hr>
+                </p>
+            {% endfor %}
+
+        </div>
+    </div>
+
 
 {% endblock %}

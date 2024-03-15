@@ -1,9 +1,8 @@
 from typing import Type
 
-from django.db import models
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from django.db import models
 
 # from apps.users.models import default_user
 
@@ -24,10 +23,12 @@ class TopicModel(models.Model):
 class RoomModel(models.Model):
     class Meta:
         db_table = 'rooms_model'
+        ordering = ['-updated_at', '-created_at']
 
     name = models.CharField(max_length=50)
     host = models.ForeignKey(UserModel, on_delete=models.SET_NULL, default=None, null=True)
     topic = models.ForeignKey(TopicModel, on_delete=models.SET_NULL, default=None, null=True)
+    participants = models.ManyToManyField(UserModel, related_name='participants')
     description = models.TextField(blank=True, default=None, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -43,5 +44,8 @@ class MessageModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created_at', '-updated_at']
+
     def __str__(self):
-        return self.body[:15]
+        return self.body[:25]

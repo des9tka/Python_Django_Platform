@@ -1,0 +1,42 @@
+{%  extends 'base_templates/base.html' %}
+
+{% block context %}
+    {% if page == 'login' %}
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <label>Username:</label>
+            <input type="text" name="username" placeholder="Enter Username">
+
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Enter Password">
+
+            <input type="submit" value="Login">
+        </form>
+    <labe>
+        Haven't sing up yet?
+        <a href="{% url 'auth_register' %}">Register</a>
+    </labe>
+    </div>
+
+    {% else %}
+
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <input type="submit" value="Register">
+        </form>
+      <labe>
+        Already sing up?
+        <a href="{% url 'auth_login' %}">Login</a>
+    </labe>
+    </div>
+    {% endif %}
+
+
+
+{% endblock %}
